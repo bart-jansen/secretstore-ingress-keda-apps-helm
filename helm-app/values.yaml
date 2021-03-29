@@ -1,0 +1,38 @@
+secretstore:
+  provider: azure
+  usePodIdentity: true
+  keyvaultName: yourkeyvaultname
+  secrets: []
+  tenantId: yourazuretenantId
+
+app:
+  name: app-service-name
+  aadpodidbinding: podidentity
+  replicaCount: 1
+  volumeMountName: secrets-store-inline
+  secretProviderClass: azure-kv-podid
+  volumeMountPath: /mnt/secrets-store
+  volumeDriver: secrets-store.csi.k8s.io
+  healthCheckPeriodSeconds: 3
+  healthCheckTimeoutSeconds: 1
+  secretEnv: []
+  container:
+    image: ghcr.io/your-username/your-repo:your-tag
+    port: 80
+    healthCheckHttpGetPath: /
+  service:
+    type: ClusterIP
+    port: 80
+  env:
+  - key: PORT
+    value: "80"
+  
+ingress:
+  name: app-ingress-name
+  replicaCount: 1
+  dnsName: yourdnsname.westeurope.cloudapp.azure.com
+  paths:
+  - path: /*
+    backend:
+      serviceName: app-service-name
+      servicePort: 80

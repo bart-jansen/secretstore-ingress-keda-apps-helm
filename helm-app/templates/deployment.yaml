@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.name }}
+    aadpodidbinding: "{{ .Values.app.aadpodidbinding }}"
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        aadpodidbinding: "{{ .Values.app.aadpodidbinding }}"
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }} # Used to force pod re-creation on helm uprade
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}
+          imagePullPolicy: Always
+          image: {{ .Values.app.container.image }}
+          ports:
+            - containerPort: {{ .Values.app.container.port }}
+          volumeMounts:
+          - name: {{ .Values.app.volumeMountName }}
+            mountPath: "{{ .Values.app.volumeMountPath }}"
+            readOnly: true
+          env:
+            {{- range .Values.app.env}}
+            - name: {{ .key}}
+              value: "{{ .value}}"
+            {{- end}}
+            {{- range .Values.app.secretEnv}}
+            - name: {{ .envName}}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $.Values.app.name }}-secrets"
+                  key: {{ .secretKey}}
+            {{- end}}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.app.container.healthCheckHttpGetPath }}
+              port: {{ .Values.app.container.port }}
+            periodSeconds: {{ .Values.app.healthCheckPeriodSeconds }}
+            timeoutSeconds: {{ .Values.app.healthCheckTimeoutSeconds }}
+            initialDelaySeconds: {{ .Values.app.healthCheckInitialDelaySeconds}}
+          {{- if .Values.app.container.livenessCheckHttpGetPath }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.app.container.livenessCheckHttpGetPath }}
+              port: {{ .Values.app.container.port }}
+            periodSeconds: {{ .Values.app.livenessCheckPeriodSeconds }}
+            timeoutSeconds: {{ .Values.app.livenessCheckTimeoutSeconds }}
+          {{- end}}
+      volumes:
+        - name: {{ .Values.app.volumeMountName }}
+          csi:
+            driver: {{ .Values.app.volumeDriver }}
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "{{ .Values.app.name }}-secretproviderclass"

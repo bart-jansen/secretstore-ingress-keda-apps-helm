@@ -1,0 +1,31 @@
+helm-app:
+  secretstore:
+    keyvaultName: yourkeyvaultname
+    tenantId: 00000000-0000-0000-0000-000000000000
+    secrets: [
+      "your-keyvault-secret"
+    ]
+
+  app:
+    name: app-service-name
+    replicaCount: 1
+    container:
+      image: ghcr.io/your-username/your-repo:your-tag
+      port: 80
+      healthCheckHttpGetPath: /health/check
+    secretEnv:
+    - envName: YourKeyVaultSecret
+      secretKey: your-keyvault-secret
+    env:
+    - key: YourEnvVariable
+      value: "var-value"
+
+  ingress:
+    name: helm-app-example-ingress
+    replicaCount: 1
+    dnsName: yourdnsname.westeurope.cloudapp.azure.com
+    paths:
+    - path: /app-service-name/*
+      backend:
+        serviceName: app-service-name
+        servicePort: 80

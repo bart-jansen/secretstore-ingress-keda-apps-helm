@@ -1,0 +1,12 @@
+apiVersion: v2
+name: helm-app-example
+description: Helm App Example Service
+type: application
+version: 0.0.0
+appVersion: 0.0.0
+
+dependencies:
+- name: "bart-jansen/secretstore-ingress-apps-helm"
+  alias: "helm-app"
+  version: "latest"
+  repository: "https://ghcr.io"
