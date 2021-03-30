@@ -8,10 +8,19 @@ jobs:
   login:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Login to GitHub Container Registry
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Save Helm Chart
+        run: helm chart save ./helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest
+        
+      - name: Push Helm Chart to GHCR
+        run: helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest  
+        
