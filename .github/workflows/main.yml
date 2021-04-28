@@ -17,18 +17,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      
-      - name: Test23
-        run: echo ${{ github.repository_owner }}
-        
-      - name: Test
-        run: echo ${{ secrets.GITHUB_TOKEN }}
       
       - name: Save Helm Chart
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
-          helm chart save ./helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest;
+          helm chart save helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest;
           helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest
           
       
