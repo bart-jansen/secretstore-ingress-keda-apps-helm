@@ -27,7 +27,7 @@ jobs:
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
           helm chart save helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest;
-          helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest
+          helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest --debug
           
       
         
