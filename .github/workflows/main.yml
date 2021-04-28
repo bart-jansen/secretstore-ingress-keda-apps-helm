@@ -24,13 +24,13 @@ jobs:
       - name: Save Helm Chart 
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
-          helm chart save helm-app ghcr.io/${{ github.repository_owner }}/${{ github.workflow }}:latest
+          helm chart save helm-app ghcr.io/${{ github.repository }}:latest
         
       - name: Push Helm Chart to GHCR
         env:
           GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}   
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
-          helm chart push ghcr.io/${{ github.repository_owner }}/${{ github.workflow }}:latest
+          helm chart push ghcr.io/${{ github.repository }}:latest
           
         
