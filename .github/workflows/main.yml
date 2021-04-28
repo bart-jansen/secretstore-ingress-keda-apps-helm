@@ -13,8 +13,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         
-      - name: Helm tool installer
-        uses: Azure/setup-helm@v1
         
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -23,18 +21,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Save Helm Chart
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
+      - name: Save Helm Chart 
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
-          helm chart save helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest;
-          helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest --debug
-          
-      
+          helm chart save helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest
         
-#       - name: Push Helm Chart to GHCR
-#         run: >
-#           export HELM_EXPERIMENTAL_OCI=1;
+      - name: Push Helm Chart to GHCR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
+        run: >
+          export HELM_EXPERIMENTAL_OCI=1;
+          helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest
           
         
