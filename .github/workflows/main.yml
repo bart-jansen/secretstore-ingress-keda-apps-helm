@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       
-      - name: Test2
+      - name: Test23
         run: echo ${{ github.repository_owner }}
         
       - name: Test
