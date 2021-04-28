@@ -24,6 +24,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Save Helm Chart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
           helm chart save helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest;
