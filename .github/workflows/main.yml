@@ -6,10 +6,15 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
+    
     steps:
+    
       - name: Checkout Repository
         uses: actions/checkout@v2
+        
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1
         
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
