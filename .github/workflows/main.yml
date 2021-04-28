@@ -21,10 +21,11 @@ jobs:
       - name: Save Helm Chart
         run: >
           export HELM_EXPERIMENTAL_OCI=1;
-          helm chart save ./helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest
+          helm chart save ./helm-app ghcr.io/bart-jansen/secretstore-ingress-apps-helm:0.0.1
+          helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:0.0.1
         
-      - name: Push Helm Chart to GHCR
-        run: >
-          export HELM_EXPERIMENTAL_OCI=1;
-          helm chart push ghcr.io/bart-jansen/secretstore-ingress-apps-helm:latest  
+#       - name: Push Helm Chart to GHCR
+#         run: >
+#           export HELM_EXPERIMENTAL_OCI=1;
+          
         
