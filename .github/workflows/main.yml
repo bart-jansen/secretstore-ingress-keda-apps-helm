@@ -17,36 +17,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         
-#       - name: install helm
-#         uses: Azure/setup-helm@v1
-
+      - name: install helm
+        uses: Azure/setup-helm@v1
+          
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1.9.0
-        with:
-          registry: ghcr.io # optional
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-#       - name: login to acr using helm
-#         run: |
-#           echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
-#       - name: Login to GitHub Container Registry
-#         uses: docker/login-action@v1
-#         with:
-#           registry: ghcr.io
-#           username: ${{ github.repository_owner }}
-#           password: ${{ secrets.GITHUB_TOKEN }}
-          
-#       - name: save helm chart to local registry
-#         run: |
-#           helm chart save ${{ github.workspace }}/helm-app/ ${{ env.GCR_IMAGE }}:${{ github.sha }}
-
-#       - name: publish chart to acr
-#         run: |
-#           helm chart push ${{ env.GCR_IMAGE }}:${{ github.sha }}
-        
-        
-
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
       
       - name: Save Helm Chart 
         run: |
@@ -56,4 +32,3 @@ jobs:
         run: |
           helm chart push ghcr.io/${{ github.repository }}:latest
           
-        
