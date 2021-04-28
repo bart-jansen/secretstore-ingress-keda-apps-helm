@@ -17,12 +17,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
         
-      - name: install helm
-        uses: Azure/setup-helm@v1
-        
-      - name: login to acr using helm
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
+#       - name: install helm
+#         uses: Azure/setup-helm@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1.9.0
+        with:
+          registry: ghcr.io # optional
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+#       - name: login to acr using helm
+#         run: |
+#           echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
 #       - name: Login to GitHub Container Registry
 #         uses: docker/login-action@v1
 #         with:
