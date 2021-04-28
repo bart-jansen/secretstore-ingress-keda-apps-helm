@@ -3,6 +3,7 @@ name: ci
 on:
   push:
     branches: master
+    
 env:
   HELM_EXPERIMENTAL_OCI: 1 #enable OCI support
   GCR_IMAGE: ghcr.io/${{ github.repository }}
@@ -29,27 +30,23 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: save helm chart to local registry
-        run: |
-          helm chart save ${{ github.workspace }}/helm-app/ ${{ env.GCR_IMAGE }}:${{ github.sha }}
+#       - name: save helm chart to local registry
+#         run: |
+#           helm chart save ${{ github.workspace }}/helm-app/ ${{ env.GCR_IMAGE }}:${{ github.sha }}
 
-      - name: publish chart to acr
-        run: |
-          helm chart push ${{ env.GCR_IMAGE }}:${{ github.sha }}
+#       - name: publish chart to acr
+#         run: |
+#           helm chart push ${{ env.GCR_IMAGE }}:${{ github.sha }}
         
         
 
       
-#       - name: Save Helm Chart 
-#         run: >
-#           export HELM_EXPERIMENTAL_OCI=1;
-#           helm chart save helm-app ghcr.io/${{ github.repository }}:latest
+      - name: Save Helm Chart 
+        run: |
+          helm chart save helm-app ghcr.io/${{ github.repository }}:latest
         
-#       - name: Push Helm Chart to GHCR
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GHCR_TOKEN }}   
-#         run: >
-#           export HELM_EXPERIMENTAL_OCI=1;
-#           helm chart push ghcr.io/${{ github.repository }}:latest
+      - name: Push Helm Chart to GHCR
+        run: |
+          helm chart push ghcr.io/${{ github.repository }}:latest
           
         
