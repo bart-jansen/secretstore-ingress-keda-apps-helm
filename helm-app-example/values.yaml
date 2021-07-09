@@ -29,3 +29,18 @@ helm-app:
       backend:
         serviceName: app-service-name
         servicePort: 80
+
+  keda:
+    enabled: true
+    name: app-service-name-keda
+    authRefName: auth-trigger-app-service-name
+    scaleTargetRef: app-service-name 
+    minReplicaCount: 1
+    maxReplicaCount: 10
+    triggers:
+    - type: azure-servicebus
+      metadata:
+        topicName: sbtopic-app-example-service
+        subscriptionName: sbsub-app-example-service
+        namespace: servicebus-app-example-ns
+        messageCount: 50
