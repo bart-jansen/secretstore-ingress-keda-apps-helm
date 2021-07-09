@@ -18,6 +18,7 @@ This repo provides two helm charts:
 The umbrella `helm-app` Chart provides these templates:
 - `deployment.yaml` - AKS deployment with the Container Pod
 - `ingress.yaml` - Ingress with all redirect rule (automatically applied to AppGateway)
+- `kedascalarr.yaml` - ScaledObject that allows KEDA to horizontally scale when enabled
 - `secretproviderclass.yaml` - SecretProviderClass that fetches secrets from Azure Key Vault and exposes them to other pods through podidentity
 - `service.yaml` - The service that hosts the app `deployment.yaml`
 
@@ -44,10 +45,8 @@ An example of all configuration parameters and its default values is shown in (.
 | `- port` | Container port the image is hosted on | 80 | 
 | `- healthCheckHttpGetPath` | Path for Application Gateway to check for a healthy endpoint<sup>2</sup> | / | 
 
-
 > <sup>1</sup> Equals podidentity binding if you didn't change the default values in the terraform deployment<br/>
  <sup>2</sup> Healthy HTTP StatusCode required, between 200 and 399
-
 
 ### Config - Ingress
 
@@ -61,7 +60,6 @@ An example of all configuration parameters and its default values is shown in (.
 | `- backend: serviceName` | Name of the service defined in app | app-service-name |
 | `- backend: servicePort` | Port where container is hosted | 80 |
 
-
 ### Config - SecretStore
 
 | Name | Description | Default |
@@ -71,6 +69,20 @@ An example of all configuration parameters and its default values is shown in (.
 | `keyvaultName` | Name of the Azure Key Vault to fetch secrets from | yourkeyvaultname | 
 | `secrets (array)` | List of secrets to fetch (e.g. ["secret1", "secret2"]) | [] | 
 | `tenantId` | TenantID of your Azure tenant | 00000000-0000-0000-0000-000000000000 | 
+
+### Config - Helm
+
+| Name | Description | Default |
+|------|-------------|---------|
+| `enabled` | Boolean to enable KEDA | false | 
+| `name` | Name of your KEDA ScaledObject | app-service-name-keda | 
+| `authRefName` | Name of the TriggerAuthentication connected to KEDA | auth-trigger-app-service-name | 
+| `scaleTargetRef` | Name of the k8s service you would like to scale up/down | app-service-name | 
+| `minReplicaCount` | Minimum pod replica count for your scalable service | 1 | 
+| `minReplicaCount` | Maximum pod replica count for your scalable service | 10 | 
+| `triggers (list)` | List of [KEDA scalars](https://keda.sh/docs/2.3/scalers/) | [] | 
+| `- type` | Type of KEDA scalar | azure-servicebus | 
+| `- metadata (object)` | Object with KEDA trigger-type specific values for scaling | {} |
 
 ## Usage
 
