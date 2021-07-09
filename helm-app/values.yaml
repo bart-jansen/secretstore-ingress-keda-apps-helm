@@ -36,3 +36,18 @@ ingress:
     backend:
       serviceName: app-service-name
       servicePort: 80
+
+keda: # KEDA (Kubernetes Event-Driven Autoscaler)
+  enabled: false # KEDA is disabled by default
+  name: app-service-name-keda
+  authRefName: auth-trigger-app-service-name
+  scaleTargetRef: app-service-name # service you would like to scale up/down
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+  - type: azure-servicebus # an example for a KEDA scalar trigger (others also allowed)
+    metadata:
+      topicName: sbtopic-app-service
+      subscriptionName: sbsub-app-service
+      namespace: servicebus-app-ns
+      messageCount: 50 # queue size treshold KEDA needs to hit to scale up/down 

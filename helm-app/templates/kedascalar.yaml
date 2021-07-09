@@ -1,0 +1,30 @@
+{{ if .Values.keda.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ .Values.keda.name }}
+spec:
+  scaleTargetRef:
+    name: {{ .Values.keda.scaleTargetRef }} # must be in the same namespace as the ScaledObject
+  minReplicaCount: {{ .Values.keda.minReplicaCount }}
+  maxReplicaCount: {{ .Values.keda.maxReplicaCount }}
+  triggers:
+    {{- range .Values.keda.triggers}}
+    - type: {{ .type }}
+      authenticationRef:
+        name: {{ $.Values.keda.authRefName }}
+      metadata:
+      {{- range $metadataKey, $metadataValue := .metadata }}
+          {{ $metadataKey }}: 
+            {{ toYaml $metadataValue }}
+      {{- end }}
+    {{- end}}
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: {{ .Values.keda.authRefName }}
+spec:
+  podIdentity:
+    provider: azure
+{{ end }}
