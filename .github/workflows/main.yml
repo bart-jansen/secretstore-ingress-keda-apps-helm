@@ -20,7 +20,7 @@ jobs:
       - name: Install Helm
         uses: Azure/setup-helm@v1
         with:
-          version: '3.6.x'
+          version: '3.6.3'
           
       - name: Login to GitHub Container Registry
         run: |
