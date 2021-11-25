@@ -32,5 +32,5 @@ jobs:
         
       - name: Push Helm Chart to GHCR
         run: |
-          helm chart push ghcr.io/${{ github.repository }}:latest
+          helm chart push ghcr.io/${{ github.repository }}:0.0.1
           
