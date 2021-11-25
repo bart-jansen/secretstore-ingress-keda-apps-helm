@@ -26,7 +26,7 @@ jobs:
       
       - name: Save Helm Chart 
         run: |
-          helm chart save helm-app ghcr.io/${{ github.repository }}:latest
+          helm chart save helm-app ghcr.io/${{ github.repository }}:0.0.1
         
       - name: Push Helm Chart to GHCR
         run: |
