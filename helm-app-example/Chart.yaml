@@ -6,7 +6,7 @@ version: 0.0.0
 appVersion: 0.0.0
 
 dependencies:
-- name: "bart-jansen/secretstore-ingress-apps-helm"
-  alias: "helm-app"
-  version: "latest"
-  repository: "https://ghcr.io"
+- name: secretstore-ingress-keda-apps-helm
+  alias: helm-app
+  version: 0.0.1
+  repository: oci://ghcr.io/bart-jansen
